@@ -1,5 +1,5 @@
 /*
- * Author: Aiyoyoyo https://github.com/aiyoyoyo/CocosCreator-Jees/src/jees-log.js
+ * Author: Aiyoyoyo https://github.com/aiyoyoyo/CocosCreator-Jees/blob/master/src/jees-log.js
  * License: MIT license
  */
 
@@ -31,7 +31,7 @@ jees.log = {
 			type: _type,
 			params: param
 		});
-		if( this._history.size() > 100 ){
+		if( this._history.length > 100 ){
 			this._history.shift();
 		}
 	},
