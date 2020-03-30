@@ -6,6 +6,7 @@
 
 # 热更处理器脚本演示
 ## 场景脚本
+```
 cc.Class({
 	extends: jees.view.Body,
 	properties:{
@@ -57,6 +58,7 @@ cc.Class({
 		this.labLoading.string = str;
 	}
 });
+```
 ## 热更插件使用注意事项
 1. 服务器版本直接通过工具依次执行生成->部署，通过网络文件对比更新跳过本地导入。
 2. 网络文件对比方式，第一次始终认为需要更新。

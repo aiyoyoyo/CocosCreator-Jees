@@ -613,11 +613,15 @@ window.jees = jees || {};
  * @see jees.file
  */
 jees.socket = {
-	_remote_config: "http://192.168.88.16/socket.json", //远程参考
-	// _remote_config: "cfgs/socket", // 本地参考 此处路径基于Cocos设置
+	/**
+	 * @example
+	 * "http://127.0.0.1/socket.json", 远程参考
+	 * "cfgs/socket", 本地参考 此处相对于Cocos resources路径
+	 */
+	_remote_config: "http://127.0.0.1/socket.json", //远程参考
 	init() {
 		if (this._inited) return;
-        this._inited = true;
+		this._inited = true;
         
         let cfg = this._remote_config;
 
@@ -819,7 +823,7 @@ jees.game = {
 	_modIdx: 1,
 	_frame: [],
 	// 初始化
-	init() {
+	init( _opt ) {
 		if (this._inited) return;
 		this._inited = true;
 		// 部分功能组件需要初始化, 部分有依赖顺序
@@ -1009,8 +1013,13 @@ jees.hotUpdate = {
 	ERROR_DECOMPRESS: 10,
 	// 配置信息
 	_current_version: "1.0.0",
-	_remote_manifest: "http://192.168.88.16/ccc/project.manifest", //远程参考
-	// _remote_manifest: "/resources/project.manifest", // 本地参考 
+	/**
+	 * 更新地址
+	 * @example 
+	 * "http://127.0.0.1/ccc/project.manifest", 远程参考
+	 * "/resources/project.manifest", 本地参考 
+	 */
+	_remote_manifest: "http://127.0.0.1/ccc/project.manifest",
 	_update_dir: "remote-assets",
 	_manifest_name: "project.manifest",
 	_manifest_file: null,
@@ -1166,9 +1175,11 @@ jees.hotUpdate = {
 	},
 	/**
 	 * 开始检查更新
-	 * @example jees.hotUpdate.check();
+	 * @param {String} _rm 更新对比地址
+ 	 * @example jees.hotUpdate.check();
 	 */
-	check() {
+	check( _rm ) {
+		if( _rm ) this._remote_manifest = _rm;
 		log("检查更新...");
 		if (!jees.platform.isNative()) {
 			log("无法使用在线更新");
