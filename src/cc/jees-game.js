@@ -24,7 +24,7 @@ jees.game = {
 	_modIdx: 1,
 	_frame: [],
 	// 初始化
-	init() {
+	init( _opt ) {
 		if (this._inited) return;
 		this._inited = true;
 		// 部分功能组件需要初始化, 部分有依赖顺序

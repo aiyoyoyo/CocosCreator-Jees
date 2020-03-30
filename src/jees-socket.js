@@ -15,11 +15,15 @@ window.jees = jees || {};
  * @see jees.file
  */
 jees.socket = {
-	_remote_config: "http://192.168.88.16/socket.json", //远程参考
-	// _remote_config: "cfgs/socket", // 本地参考 此处路径基于Cocos设置
+	/**
+	 * @example
+	 * "http://127.0.0.1/socket.json", 远程参考
+	 * "cfgs/socket", 本地参考 此处相对于Cocos resources路径
+	 */
+	_remote_config: "http://127.0.0.1/socket.json", //远程参考
 	init() {
 		if (this._inited) return;
-        this._inited = true;
+		this._inited = true;
         
         let cfg = this._remote_config;
 
