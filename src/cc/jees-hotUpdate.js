@@ -217,8 +217,8 @@ jees.hotUpdate = {
 	 * @param {String} _rm 更新对比地址
  	 * @example jees.hotUpdate.check();
 	 */
-	check( _rm ) {
-		if( _rm ) this._remote_manifest = _rm;
+	check(_rm) {
+		if (_rm) this._remote_manifest = _rm;
 		log("检查更新...");
 		if (!jees.platform.isNative()) {
 			log("无法使用在线更新");

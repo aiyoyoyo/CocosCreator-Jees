@@ -33,6 +33,6 @@ jees.unit = {
 			unit = "GB";
 		}
 		return size.toFixed(_size || 2) + unit;
-    },
-    // TODO 时间换算 ////
+	},
+	// TODO 时间换算 ////
 };

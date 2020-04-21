@@ -43,34 +43,34 @@ jees.log = {
 			type: _type,
 			params: param
 		});
-		if( this._history.length > 100 ){
+		if (this._history.length > 100) {
 			this._history.shift();
 		}
 	},
 	_log(_txt, _p0, _p1, _p2, _p3, _p4) {
-		if (_p4) console.log("CCC.Log:" + _txt, _p0, _p1, _p2, _p3, _p4);
-		else if (_p3) console.log("CCC.Log:" + _txt, _p0, _p1, _p2, _p3);
-		else if (_p2) console.log("CCC.Log:" + _txt, _p0, _p1, _p2);
-		else if (_p1) console.log("CCC.Log:" + _txt, _p0, _p1);
-		else if (_p0) console.log("CCC.Log:" + _txt, _p0);
+		if (_p4 != undefined) console.log("CCC.Log:" + _txt, _p0, _p1, _p2, _p3, _p4);
+		else if (_p3 != undefined) console.log("CCC.Log:" + _txt, _p0, _p1, _p2, _p3);
+		else if (_p2 != undefined) console.log("CCC.Log:" + _txt, _p0, _p1, _p2);
+		else if (_p1 != undefined) console.log("CCC.Log:" + _txt, _p0, _p1);
+		else if (_p0 != undefined) console.log("CCC.Log:" + _txt, _p0);
 		else console.log("CCC.Log:" + _txt);
 		this._push(_txt, this.TYPE_LOG, _p0, _p1, _p2, _p3, _p4);
 	},
 	_warn(_txt, _p0, _p1, _p2, _p3, _p4) {
-		if (_p4) console.warn("CCC.Warn:" + _txt, _p0, _p1, _p2, _p3, _p4);
-		else if (_p3) console.warn("CCC.Warn:" + _txt, _p0, _p1, _p2, _p3);
-		else if (_p2) console.warn("CCC.Warn:" + _txt, _p0, _p1, _p2);
-		else if (_p1) console.warn("CCC.Warn:" + _txt, _p0, _p1);
-		else if (_p0) console.warn("CCC.Warn:" + _txt, _p0);
+		if (_p4 != undefined) console.warn("CCC.Warn:" + _txt, _p0, _p1, _p2, _p3, _p4);
+		else if (_p3 != undefined) console.warn("CCC.Warn:" + _txt, _p0, _p1, _p2, _p3);
+		else if (_p2 != undefined) console.warn("CCC.Warn:" + _txt, _p0, _p1, _p2);
+		else if (_p1 != undefined) console.warn("CCC.Warn:" + _txt, _p0, _p1);
+		else if (_p0 != undefined) console.warn("CCC.Warn:" + _txt, _p0);
 		else console.warn("CCC.Warn:" + _txt);
 		this._push(_txt, this.TYEP_WARN, _p0, _p1, _p2, _p3, _p4);
 	},
 	_err(_txt, _p0, _p1, _p2, _p3, _p4) {
-		if (_p4) console.error("CCC.Err:" + _txt, _p0, _p1, _p2, _p3, _p4);
-		else if (_p3) console.error("CCC.Err:" + _txt, _p0, _p1, _p2, _p3);
-		else if (_p2) console.error("CCC.Err:" + _txt, _p0, _p1, _p2);
-		else if (_p1) console.error("CCC.Err:" + _txt, _p0, _p1);
-		else if (_p0) console.error("CCC.Err:" + _txt, _p0);
+		if (_p4 != undefined) console.error("CCC.Err:" + _txt, _p0, _p1, _p2, _p3, _p4);
+		else if (_p3 != undefined) console.error("CCC.Err:" + _txt, _p0, _p1, _p2, _p3);
+		else if (_p2 != undefined) console.error("CCC.Err:" + _txt, _p0, _p1, _p2);
+		else if (_p1 != undefined) console.error("CCC.Err:" + _txt, _p0, _p1);
+		else if (_p0 != undefined) console.error("CCC.Err:" + _txt, _p0);
 		else console.error("CCC.Err:" + _txt);
 		this._push(_txt, this.TYEP_ERROR, _p0, _p1, _p2, _p3, _p4);
 	},
@@ -90,12 +90,12 @@ window.log = function (_txt, _p0, _p1, _p2, _p3, _p4) {
 window.err = function (_txt, _p0, _p1, _p2, _p3, _p4) {
 	jees.log.err(_txt, _p0, _p1, _p2, _p3, _p4);
 };
-window.warn = function () {
+window.warn = function (_txt, _p0, _p1, _p2, _p3, _p4) {
 	jees.log.warn(_txt, _p0, _p1, _p2, _p3, _p4);
 };;
-///<jscompress sourcefile="jees-md5.js" />
+///<jscompress sourcefile="jees-util.js" />
 /*
- * Author: Aiyoyoyo https://github.com/aiyoyoyo/CocosCreator-Jees/blob/master/src/jees-md5.js
+ * Author: Aiyoyoyo https://github.com/aiyoyoyo/CocosCreator-Jees/blob/master/src/jees-util.js
  * License: MIT license
  */
 
@@ -105,17 +105,285 @@ window.warn = function () {
 // namespace:
 window.jees = jees || {};
 /**
- * 此处内容来自网络，除参数命名外，未做任何更改。
- * 来源: https://www.cnblogs.com/pixs-union/p/9435882.html
- * @example md5( "xxx" );
+ * 通用工具库
+ * @example
+ * jees.util.random( 0, 1 ); // 0 或者 1
+ * jees.util.randomFloat( -1, 1 ); // -1.00到1.00之间
+ * jees.util.randomWeight( [ {name:'1',weight:1.5},{name:'2',weight:2.5},{name:'3',weight:3.5} ] ); // 返回其中一个
+ * jees.util.decimal2string( new Decimal( 10000000 ) ); // 返回 10M
+ * jees.util.string2decimal( "10|M" ); // 返回 new Decimal( 1000000 );
  */
+jees.util = {
+    _seed: 0,
+    _units: null,
+    _random_seed() {
+        this._seed = (this._seed * 9301 + 49297) % 233280;
+        return this._seed / 233280.0;
+    },
+    /**
+     * 获取本地时间戳
+     * @public
+     * @returns {Long}
+     */
+    timestamp() {
+        return new Date().getTime();
+    },
+    /**
+     * 随机 min <= r <= max 之间的数
+     * @public
+     * @param {Integer} _n 最小值 
+     * @param {Integer} _m 最大值
+     * @returns {Integer}
+     */
+    random(_n, _m) {
+        if (this._seed == 0) {
+            this._seed = this._random_seed(this.timestamp());
+        }
+        var r0 = _m - _n;
+        var r1 = Math.random(this._seed);
+        return _n + Math.round(r0 * r1);
+    },
+    /**
+     * 随机 -1 <= r <= 1 之间的数
+     * @public
+     * @param {Integer} _n 最小值 
+     * @param {Integer} _m 最大值
+     * @returns {Float}
+     */
+    randomFloat(_n, _m) {
+        if (_n < -1) _n = -1;
+        if (_m > 1) _m = 1;
+        return this.random(_n * 100, _m * 100) / 100;
+    },
+    /**
+     * 判断对象是否为整数
+     * @public
+     * @param {Object} _val 
+     * @returns {Boolean}
+     */
+    isInteger(_val) {
+        return typeof _val == "number" && _val % 1 == 0;
+    },
+    /**
+    * js数组实现权重概率分配，支持数字比模式(支持2位小数)和百分比模式(不支持小数，最后一个元素多退少补)
+    * @param  Array  arr  js数组，参数类型[Object,Object,Object……]
+    * @return  Array      返回一个随机元素，概率为其weight/所有weight之和，参数类型Object
+    * @author  shuiguang
+    */
+    randomWeight(_arr) {
+        //参数arr元素必须含有weight属性，参考如下所示
+        //var arr=[{name:'1',weight:1.5},{name:'2',weight:2.5},{name:'3',weight:3.5}];
+        //var arr=[{name:'1',weight:'15%'},{name:'2',weight:'25%'},{name:'3',weight:'35%'}];
+        //求出最大公约数以计算缩小倍数，perMode为百分比模式
+        let per;
+        let maxNum = 0;
+        let perMode = false;
+        //自定义Math求最小公约数方法
+        Math.gcd = (a, b) => {
+            let min = Math.min(a, b);
+            let max = Math.max(a, b);
+            let result = 1;
+
+            if (a === 0 || b === 0) {
+                return max;
+            }
+
+            for (let i = min; i >= 1; i--) {
+                if (min % i === 0 && max % i === 0) {
+                    result = i;
+                    break;
+                }
+            }
+            return result;
+        };
+        //使用clone元素对象拷贝仍然会造成浪费，但是使用权重数组对应关系更省内存
+        let weight_arr = new Array();
+        for (let i = 0; i < _arr.length; i++) {
+            let wgt = _arr[i].weight;
+            if (typeof wgt == "number") {
+                if (this.isInteger(wgt)) {
+                    per = Math.floor(wgt);
+                } else {
+                    per = Math.floor(wgt * 100);
+                    perMode = true;
+                }
+            } else {
+                per = 0;
+            }
+            weight_arr[i] = per;
+            maxNum = Math.gcd(maxNum, per);
+        }
+        //数字比模式，3:5:7，其组成[0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2]
+        //百分比模式，元素所占百分比为15%，25%，35%
+        let index = new Array();
+        let total = 0;
+        let len = 0;
+        if (perMode) {
+            for (let i = 0; i < _arr.length; i++) {
+                //len表示存储arr下标的数据块长度，已优化至最小整数形式减小索引数组的长度
+                len = weight_arr[i];
+                for (j = 0; j < len; j++) {
+                    //超过100%跳出，后面的舍弃
+                    if (total >= 100) {
+                        break;
+                    }
+                    index.push(i);
+                    total++;
+                }
+            }
+
+            //使用最后一个元素补齐100%
+            while (total < 100) {
+                index.push(_arr.length - 1);
+                total++;
+            }
+        } else {
+            for (let i = 0; i < _arr.length; i++) {
+                //len表示存储arr下标的数据块长度，已优化至最小整数形式减小索引数组的长度
+                len = weight_arr[i] / maxNum;
+                for (let j = 0; j < len; j++) {
+                    index.push(i);
+                }
+                total += len;
+            }
+        }
+
+        //随机数值，其值为0-11的整数，数据块根据权重分块
+        var rand = Math.floor(Math.random() * total);
+        return index[rand];
+    },
+    UNIT_BASE: ["", "", "M", "B", "T"],
+    UNIT_CHAT: [
+        "a", "b", "c", "d", "e", "f", "g",
+        "h", "i", "j", "k", "l", "m", "n",
+        "o", "p", "q", "r", "s", "t",
+        "u", "v", "w", "x", "y", "z"],
+    /**
+     * 将大数字转换为带单位的6位长度数字
+     * @public
+     * @see https://github.com/MikeMcl/decimal.js/
+     * @param {Decimal} _val 
+     * @returns {String}
+     */
+    decimal2string(_val) {
+        if (!(_val instanceof Decimal)) {
+            _val = new Decimal(_val);
+        }
+        let neg = _val.isNeg();
+        if (neg) _val = _val.abs();
+        let n = _val;
+        let e = n.e;
+        let m = e / 3;
+        if (e % 3 != 0) {
+            m = Math.floor((e - 1) / 3);
+            e = m * 3;
+            if (e < 0) e = 0;
+        }
+        if (m < 0) m = 0;
+        let str = "";
+        let unit = "";
+        if (e < 15) {
+            unit = this.UNIT_BASE[m];
+        } else {
+            let n = Math.floor((e - 15) / 3);
+            unit = "";
+            if (n < 26) {
+                unit = this.UNIT_CHAT[0] + this.UNIT_CHAT[n];
+            } else {
+                while (n > 0) {
+                    let r = n % 26;
+                    n = Math.floor(n / 26);
+                    unit = this.UNIT_CHAT[r] + unit;
+                }
+            }
+        }
+        if (n.lt(1000)) {
+            str = n.toFixed(3).toString();
+            if (str.indexOf(".") != -1) {
+                while (str.charAt(str.length - 1) == "0") {
+                    str = str.slice(0, str.length - 1);
+                }
+            }
+            if (str.charAt(str.length - 1) == ".") {
+                str = str.slice(0, str.length - 1);
+            }
+        } else if (n.lt(1000000)) {
+            str = n.toDP(0).toString();
+            let ins = str.length - 3;
+            str = str.slice(0, ins) + "," + str.slice(ins);
+        } else {
+            let n0 = n.div(Decimal.pow(1000, m)).toFixed(3);
+            str = n0.toString();
+            if (str.indexOf(".") != -1) {
+                while (str.charAt(str.length - 1) == "0") {
+                    str = str.slice(0, str.length - 1);
+                }
+            }
+            if (str.charAt(str.length - 1) == ".") {
+                str = str.slice(0, str.length - 1);
+            }
+        }
+        return (neg ? "-" : "") + str + unit;
+    },
+    /**
+     * 将字符串转为大数字, 格式为 10, "10", "10|T"
+     * @public
+     * @see https://github.com/MikeMcl/decimal.js/
+     * @param {Number||String} _val 
+     * @returns {Decimal}
+     */
+    string2decimal(_str) {
+        let num;
+        if (_str instanceof Decimal) {
+            return _str;
+        }
+        _str = "" + _str;
+        if (typeof _str == 'number') {
+            num = new Decimal(_str);
+            // debug( "NumberUtils.string2decimal: number->" + num.toString() );
+            return num;
+        }
+        if (_str.indexOf("|") == -1) {
+            num = new Decimal(_str);
+            // debug( "NumberUtils.string2decimal: string->" + num.toString() );
+            return num;
+        }
+
+        let str = _str.split("|");
+        let m = 0;
+        let x = parseFloat(str[0]);
+        if (this._units == null) {
+            this._units = new Map();
+            let cfgs = C.all("GameUnit");
+            for (let cfg of cfgs) {
+                this._units.set(cfg[1].unit, cfg[0]);
+            }
+        }
+        if (this._units.has(str[1])) {
+            m = this._units.get(str[1]);
+        }
+        num = Decimal.pow(10, m).times(x);
+        // debug( "NumberUtils.string2decimal: -->" + num.toString() );
+        return num;
+    },
+    // 获取网路js
+	loadjs( _url ){
+		var dom_head = document.getElementsByTagName( "head" ).item(0);
+		var spt_el = document.createElement('script');
+		spt_el.src = _url;
+		spt_el.type = 'text/javascript'; 
+		spt_el.defer = true;             
+		dom_head.appendChild( spt_el );
+	},
+};;
+///<jscompress sourcefile="jees-md5.js" />
 jees.md5 = function (_txt) {
 	let data = _txt;
 	// for test/debug
 	function fflog(msg) {
 		try {
 			log(msg);
-		} catch (e) {}
+		} catch (e) { }
 	}
 
 	// convert number to (unsigned) 32 bit hex, zero filled string
@@ -389,24 +657,7 @@ jees.data = {
 	get2(_key, _obj) {
 		let data = this.get(_key);
 		if (data) {
-			data = JSON.parse(data);
-			for (var p in _obj) {
-				// 仅处理最新的数据结构，旧的历史数据将被移除
-				if (data.hasOwnProperty(p)) {
-					// 属性转换部分
-					// _obj[p] = data[p];
-					if (_obj[p] instanceof Date) {
-						_obj[p] = new Date(data[p]);
-					} else {
-						// 不转换_开头属性，便于本地处理数据
-						if (!p.startsWith("_")) {
-							_obj[p] = data[p];
-						}
-					}
-				} else {
-					// log( "移除属性: " + p );
-				}
-			}
+			_obj = this.json2data(JSON.parse(data), _obj);
 			return _obj;
 		}
 		return null;
@@ -430,6 +681,41 @@ jees.data = {
 	 */
 	del(_key) {
 		return this._local.removeItem(_key);
+	},
+	// 将jsonobj转换成js对象
+	json2data(_data, _obj) {
+		for (var p in _obj) {
+			// 仅处理最新的数据结构，旧的历史数据将被移除
+			if (_data.hasOwnProperty(p)) {
+				// 属性转换部分
+				// _obj[p] = data[p];
+				if (_obj[p] instanceof Date) {
+					_obj[p] = new Date(_data[p]);
+				} else {
+					// 不转换_开头属性，便于本地处理数据
+					if (!p.startsWith("_")) {
+						_obj[p] = _data[p];
+					}
+				}
+			} else {
+				// log( "移除属性: " + p );
+			}
+		}
+		return _obj;
+	},
+	//加载的时候转换，适合array类型数据
+	eachLoad(_key, _func) {
+		let tmp = jees.data.get(_key);
+		if (!tmp) return [];
+		let arr = JSON.parse(jees.data.get(_key));
+		let len = arr.length;
+		for (let i = 0; i < len; i++) {
+			let d = arr[i];
+			if (_func) {
+				arr[i] = _func(d);
+			}
+		}
+		return arr;
 	},
 	// TODO 数据集合操作 //////
 };;
@@ -507,6 +793,9 @@ jees.notifire = {
 	 */
 	notify(_evt, _p0, _p1, _p2, _p3, _p4) {
 		let evt_coms = this._events.get(_evt);
+		if (!evt_coms) {
+			return;
+		}
 		for (let com of evt_coms.keys()) {
 			let nofun = true;
 			if (com._evt_funs) {
@@ -522,8 +811,8 @@ jees.notifire = {
 		}
 	},
 };
-window.notify = function (_evt) {
-	jees.notifire.notify(_evt);
+window.notify = function (_evt, _p0, _p1, _p2, _p3, _p4) {
+	jees.notifire.notify(_evt, _p0, _p1, _p2, _p3, _p4);
 };;
 ///<jscompress sourcefile="jees-http.js" />
 /*
@@ -622,8 +911,8 @@ jees.socket = {
 	init() {
 		if (this._inited) return;
 		this._inited = true;
-        
-        let cfg = this._remote_config;
+
+		let cfg = this._remote_config;
 
 		if (cfg.startsWith("http")) {
 			jees.http.get(cfg, (_content) => {
@@ -685,8 +974,8 @@ jees.unit = {
 			unit = "GB";
 		}
 		return size.toFixed(_size || 2) + unit;
-    },
-    // TODO 时间换算 ////
+	},
+	// TODO 时间换算 ////
 };;
 ///<jscompress sourcefile="jees-platform.js" />
 /*
@@ -715,6 +1004,9 @@ jees.platform = {
 	},
 	localStorage() {
 		return cc.sys.localStorage;
+	},
+	locale() {
+		return cc.sys.languageCode;
 	},
 };;
 ///<jscompress sourcefile="jees-file.js" />
@@ -759,8 +1051,25 @@ jees.file = {
 		});
 	},
 	// 本地目录下指定类型文件
-	files(_path, _type) {
-
+	files(_path, _func, _errh) {
+		cc.loader.loadResDir(_path, (_err, _files) => {
+			if (_err) {
+				err("加载文件发生错误：" + JSON.stringify(_err));
+				_errh && _errh(_err);
+				return;
+			}
+			_func && _func(_files);
+		});
+	},
+	filesBy(_path, _type, _func, _errh) {
+		cc.loader.loadResDir(_path, _type, (_err, _files) => {
+			if (_err) {
+				err("加载文件发生错误：" + JSON.stringify(_err));
+				_errh && _errh(_err);
+				return;
+			}
+			_func && _func(_files);
+		});
 	},
 	// 获取本地json
 	json(_path, _func, _errh) {
@@ -818,15 +1127,20 @@ window.jees = jees || {};
  */
 jees.game = {
 	// 设定场景从Start开始，与场景文件名称相同
-	_mods: ["Start", "Update", "Game"],
-	// _mods: ["Start", "Update", "Loading", "Game"], // 多一个预加载界面
-	_modIdx: 1,
+	_fires: ["Start", "Update", "Game"],
+	// _fires: ["Start", "Update", "Loading", "Game"], // 多一个预加载界面
+	_fireIdx: 1,
 	_frame: [],
+	_time: 0,
 	// 初始化
-	init( _opt ) {
+	init(_opt) {
 		if (this._inited) return;
 		this._inited = true;
 		// 部分功能组件需要初始化, 部分有依赖顺序
+		if (_opt && _opt.mods) {
+			this._fires = _opt.fires;
+		}
+		this._time = jees.util.timestamp();
 
 		jees.data.init(); // 数据处理组件
 		jees.http.init(); // 网络组件
@@ -835,13 +1149,14 @@ jees.game = {
 	// 调用即代表流程进入下一阶段
 	enter() {
 		//必走的流程
-		let mod = this._mods[this._modIdx];
-		if (this._modIdx >= this._mods.length) return;
-		this._modIdx++;
-		cc.director.loadScene(mod);
+		let fire = this._fires[this._fireIdx];
+		if (this._fireIdx >= this._fires.length) return;
+		this._fireIdx++;
+		log("切换界面: ", fire);
+		cc.director.loadScene(fire);
 	},
 	// TODO 离开当前流程界面，应返回上一个流程界面
-	leave() {},
+	leave() { },
 	/**
 	 * 在frame加入一个方法，在下次update时调用并移除，必须由脚本调用才触发。
 	 * 需要在当前主场景调用jees.game.update();
@@ -859,6 +1174,18 @@ jees.game = {
 	update(_tick) {
 		let func = this._frame.shift();
 		func && func();
+	},
+	/**
+	 * 游戏时间戳，如果存在服务器时间，则不取本地时间
+	 */
+	time(){
+		return this._time == 0 ? jees.util.timestamp() : this._time;
+	},
+	/**
+	 * 游戏时间增加1秒
+	 */
+	timeplus(){
+		if( this._time != 0 ) this._time += 1000;
 	},
 };;
 ///<jscompress sourcefile="jees-view.js" />
@@ -891,7 +1218,7 @@ jees.view = {
 	},
 };
 /**
- * 核心脚本
+ * 核心脚本，生命周期方法请使用继承方法，请参考示例代码
  * jees.view.Comp
  * @extends cc.Component
  * @example extends: jees.view.Comp
@@ -914,6 +1241,7 @@ jees.view.Comp = cc.Class({
 		this._ex_disable && this._ex_disable();
 	},
 	onDestroy() {
+		this.unbind();
 		this._ex_destroy && this._ex_destroy();
 	},
 	bind(_evt, _func) {
@@ -924,7 +1252,12 @@ jees.view.Comp = cc.Class({
 	},
 	notify(_evt, _p0, _p1, _p2, _p3, _p4) {
 		this._ex_notify && this._ex_notify(_evt, _p0, _p1, _p2, _p3, _p4);
-	}
+	},
+	click(_node, _func) {
+		_node.on(cc.Node.EventType.TOUCH_END, () => {
+			_func && _func();
+		});
+	},
 });
 /**
  * 场景根脚本
@@ -937,17 +1270,46 @@ jees.view.Fire = cc.Class({
 		nodeHead: cc.Node,
 		nodeBody: cc.Node,
 		viewBody: cc.Prefab,
+		nodeWind: cc.Node,
 	},
 	// 重载onload事件，用于初始化jees.game、jees.view相关内容
 	onLoad() {
-		jees.game.init();
 		jees.view.init(this);
 		// 通过在编辑器绑定根节点预制体(Body)
 		if (!!this.nodeBody && !!this.viewBody) {
-			var body = cc.instantiate(this.viewBody);
+			let body = cc.instantiate(this.viewBody);
 			this.nodeBody.addChild(body);
 		}
 		this._ex_load && this._ex_load();
+
+		this._windows = new Map();
+	},
+	start(){
+		this._ex_start && this._ex_start();
+		this.schedule( ()=>{ 
+			this.second();
+		}, 1);
+	},
+	// 每帧回调
+	update(_t) {
+		jees.game.update();
+		this._ex_update && this._ex_update(_t);
+	},
+	// 打开一个窗口型预制体
+	openWindow(_name, _p0, _p1, _p2, _p3, _p4) {
+		if (!this.nodeWind) return;
+
+		jees.file.load("views/window/" + _name, (_file) => {
+			let comp = cc.instantiate(_file);
+			let wind = comp.getComponent(jees.view.Window);
+			wind.setParams(_p0, _p1, _p2, _p3, _p4);
+			this.nodeWind.addChild(comp);
+		});
+	},
+	// 每秒回调
+	second(){
+		jees.game.timeplus();
+		this._ex_second && this._ex_second();
 	},
 });
 /**
@@ -957,6 +1319,87 @@ jees.view.Fire = cc.Class({
  */
 jees.view.Body = cc.Class({
 	extends: jees.view.Comp,
+});
+/**
+ * 窗口显示效果类型
+ */
+window.ShowType = cc.Enum({
+	NONE: -1,
+	SCALE: -1,
+});
+/**
+ * Window预制体
+ * @extends jees.view.Comp
+ * @example extends: jees.view.Window
+ */
+jees.view.Window = cc.Class({
+	extends: jees.view.Comp,
+	properties: {
+		nodeClose: cc.Node,
+		nodeBody: cc.Node,
+		ShowType: {
+			default: ShowType.NONE,
+			type: ShowType,
+			tooltip: CC_DEV && '显示效果',
+		},
+		// TODO 加入可配置内容
+		HideType: {
+			default: ShowType.NONE,
+			type: ShowType,
+			tooltip: CC_DEV && '隐藏效果',
+		},
+		// TODO 加入可配置内容
+	},
+	onLoad() {
+		// 通过在编辑器绑定根节点预制体(Body)
+		if (!!this.nodeClose) {
+			this.click(this.nodeClose, () => { this._hide(); });
+		}
+		this._ex_load && this._ex_load();
+	},
+	start() {
+		this._show();
+		this._ex_start && this._ex_start();
+	},
+	setParams(_p0, _p1, _p2, _p3, _p4) {
+		this._params = [_p0, _p1, _p2, _p3, _p4];
+	},
+	_show() {
+		switch (this.ShowType) {
+			case ShowType.SCALE: this._scale_show(); break;
+			case ShowType.NONE:
+			default: this._on_show(); break;
+		}
+	},
+	_hide() {
+		switch (this.HideType) {
+			case ShowType.SCALE: this._scale_hide(); break;
+			case ShowType.NONE:
+			default: this._on_hide(); break;
+		}
+	},
+	_get_node() {
+		return this.nodeBody || this.node;
+	},
+	_on_show() {
+		this.node.active = true;
+	},
+	_on_hide() {
+		this.node.active = false;
+		this.node.destroy();
+	},
+	_scale_show() {
+		let node = this._get_node();
+		cc.tween(node).to(0, { scale: 0.1 }).to(0.2, { scale: 1.2 }).to(0.1, { scale: 1 }).call(() => {
+			this._on_show();
+		}).start();
+	},
+	_scale_hide() {
+		let node = this._get_node();
+		cc.tween(node).to(0.1, { scale: 1.2 }).to(0.2, { scale: 0.1 }).call(() => {
+			this._on_hide();
+		}).start();
+	},
 });;
 ///<jscompress sourcefile="jees-hotUpdate.js" />
 /*
@@ -1178,8 +1621,8 @@ jees.hotUpdate = {
 	 * @param {String} _rm 更新对比地址
  	 * @example jees.hotUpdate.check();
 	 */
-	check( _rm ) {
-		if( _rm ) this._remote_manifest = _rm;
+	check(_rm) {
+		if (_rm) this._remote_manifest = _rm;
 		log("检查更新...");
 		if (!jees.platform.isNative()) {
 			log("无法使用在线更新");

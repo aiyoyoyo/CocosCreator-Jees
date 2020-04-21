@@ -1,8 +1,9 @@
 ﻿<jscompress public="http://www.jscompress.cn/" command="import-combineset">
 <combinefile path="jees.js">
-    <auto value="0" />
+    <auto value="1" />
     <sourcefile path=".\src\jees.js" />
     <sourcefile path=".\src\jees-log.js" />
+    <sourcefile path=".\src\jees-util.js" />
     <sourcefile path=".\src\jees-md5.js" />
     <sourcefile path=".\src\jees-data.js" />
     <sourcefile path=".\src\jees-notifire.js" />

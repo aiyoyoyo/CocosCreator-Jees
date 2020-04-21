@@ -24,8 +24,8 @@ jees.socket = {
 	init() {
 		if (this._inited) return;
 		this._inited = true;
-        
-        let cfg = this._remote_config;
+
+		let cfg = this._remote_config;
 
 		if (cfg.startsWith("http")) {
 			jees.http.get(cfg, (_content) => {

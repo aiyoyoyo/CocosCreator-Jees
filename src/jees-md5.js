@@ -1,25 +1,10 @@
-/*
- * Author: Aiyoyoyo https://github.com/aiyoyoyo/CocosCreator-Jees/blob/master/src/jees-md5.js
- * License: MIT license
- */
-
-/**
- * @module Jees
- */
-// namespace:
-window.jees = jees || {};
-/**
- * 此处内容来自网络，除参数命名外，未做任何更改。
- * 来源: https://www.cnblogs.com/pixs-union/p/9435882.html
- * @example md5( "xxx" );
- */
 jees.md5 = function (_txt) {
 	let data = _txt;
 	// for test/debug
 	function fflog(msg) {
 		try {
 			log(msg);
-		} catch (e) {}
+		} catch (e) { }
 	}
 
 	// convert number to (unsigned) 32 bit hex, zero filled string

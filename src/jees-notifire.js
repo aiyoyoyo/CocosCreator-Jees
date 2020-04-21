@@ -71,6 +71,9 @@ jees.notifire = {
 	 */
 	notify(_evt, _p0, _p1, _p2, _p3, _p4) {
 		let evt_coms = this._events.get(_evt);
+		if (!evt_coms) {
+			return;
+		}
 		for (let com of evt_coms.keys()) {
 			let nofun = true;
 			if (com._evt_funs) {
@@ -86,6 +89,6 @@ jees.notifire = {
 		}
 	},
 };
-window.notify = function (_evt) {
-	jees.notifire.notify(_evt);
+window.notify = function (_evt, _p0, _p1, _p2, _p3, _p4) {
+	jees.notifire.notify(_evt, _p0, _p1, _p2, _p3, _p4);
 };

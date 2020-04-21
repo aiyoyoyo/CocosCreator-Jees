@@ -25,4 +25,7 @@ jees.platform = {
 	localStorage() {
 		return cc.sys.localStorage;
 	},
+	locale() {
+		return cc.sys.languageCode;
+	},
 };

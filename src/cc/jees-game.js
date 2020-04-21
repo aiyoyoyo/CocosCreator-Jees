@@ -19,15 +19,20 @@ window.jees = jees || {};
  */
 jees.game = {
 	// 设定场景从Start开始，与场景文件名称相同
-	_mods: ["Start", "Update", "Game"],
-	// _mods: ["Start", "Update", "Loading", "Game"], // 多一个预加载界面
-	_modIdx: 1,
+	_fires: ["Start", "Update", "Game"],
+	// _fires: ["Start", "Update", "Loading", "Game"], // 多一个预加载界面
+	_fireIdx: 1,
 	_frame: [],
+	_time: 0,
 	// 初始化
-	init( _opt ) {
+	init(_opt) {
 		if (this._inited) return;
 		this._inited = true;
 		// 部分功能组件需要初始化, 部分有依赖顺序
+		if (_opt && _opt.mods) {
+			this._fires = _opt.fires;
+		}
+		this._time = jees.util.timestamp();
 
 		jees.data.init(); // 数据处理组件
 		jees.http.init(); // 网络组件
@@ -36,13 +41,14 @@ jees.game = {
 	// 调用即代表流程进入下一阶段
 	enter() {
 		//必走的流程
-		let mod = this._mods[this._modIdx];
-		if (this._modIdx >= this._mods.length) return;
-		this._modIdx++;
-		cc.director.loadScene(mod);
+		let fire = this._fires[this._fireIdx];
+		if (this._fireIdx >= this._fires.length) return;
+		this._fireIdx++;
+		log("切换界面: ", fire);
+		cc.director.loadScene(fire);
 	},
 	// TODO 离开当前流程界面，应返回上一个流程界面
-	leave() {},
+	leave() { },
 	/**
 	 * 在frame加入一个方法，在下次update时调用并移除，必须由脚本调用才触发。
 	 * 需要在当前主场景调用jees.game.update();
@@ -60,5 +66,17 @@ jees.game = {
 	update(_tick) {
 		let func = this._frame.shift();
 		func && func();
+	},
+	/**
+	 * 游戏时间戳，如果存在服务器时间，则不取本地时间
+	 */
+	time(){
+		return this._time == 0 ? jees.util.timestamp() : this._time;
+	},
+	/**
+	 * 游戏时间增加1秒
+	 */
+	timeplus(){
+		if( this._time != 0 ) this._time += 1000;
 	},
 };

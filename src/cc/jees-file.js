@@ -39,8 +39,25 @@ jees.file = {
 		});
 	},
 	// 本地目录下指定类型文件
-	files(_path, _type) {
-
+	files(_path, _func, _errh) {
+		cc.loader.loadResDir(_path, (_err, _files) => {
+			if (_err) {
+				err("加载文件发生错误：" + JSON.stringify(_err));
+				_errh && _errh(_err);
+				return;
+			}
+			_func && _func(_files);
+		});
+	},
+	filesBy(_path, _type, _func, _errh) {
+		cc.loader.loadResDir(_path, _type, (_err, _files) => {
+			if (_err) {
+				err("加载文件发生错误：" + JSON.stringify(_err));
+				_errh && _errh(_err);
+				return;
+			}
+			_func && _func(_files);
+		});
 	},
 	// 获取本地json
 	json(_path, _func, _errh) {
