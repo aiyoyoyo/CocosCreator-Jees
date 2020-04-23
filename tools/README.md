@@ -10,6 +10,7 @@
 3. 第二行为字段类型，支持: int, float, long, bool, string, none
 4. none类型将不做转换
 5. 内容留空时将根据类型写入默认值，上述类型分别对应: 0, 0.0, 0, false, ""
+6. 页签名字为Sheet或者None_开头时不转换
 
 ##其他说明
 1. xls2json.py需要与excel文件目录同级

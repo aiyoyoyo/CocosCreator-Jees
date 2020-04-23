@@ -62,7 +62,7 @@ def xls_2_json( _path, _xls ):
     print( "--Load xlxs: " + _path + "/" + _xls )
     data = xlrd.open_workbook( _path + "/" + _xls )
     for sheet in data.sheets():
-        if( sheet.name.startswith( "Sheet" ) == False ):
+        if( sheet.name.startswith( "Sheet" ) == False and sheet.name.startswith( "None_" ) == False ):
             sheet_2_json( _path, sheet )
 
 def sheet_2_json( _path, _sheet ):
@@ -120,7 +120,7 @@ def start():
                         skip = 0
                     elif( file.endswith( ".xls" ) == True or file.endswith( ".xlsx" ) == True ):
                         xls_2_json( tmp_path, file )
-    
+
 start();
     
 
