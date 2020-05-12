@@ -279,10 +279,14 @@ jees.util = {
 		spt_el.defer = true;             
 		dom_head.appendChild( spt_el );
     },
-    // 倒计时格式化
+    /**
+     * 倒计时格式化
+     * @param {Long} _time ms
+     * @param {*} _format "hh:mm:ss"
+     */
     time2cd( _time, _format ){
         let str = "";
-        let s = parseInt( _time / 1000 );
+        let s = parseInt( ( _time + 900 ) / 1000 ); // 将倒计时延后900ms的数值
         let m = parseInt( s / 60 );
         let h = parseInt( m / 60 );
         s = s % 60;
