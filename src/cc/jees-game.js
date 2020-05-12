@@ -22,6 +22,7 @@ jees.game = {
 	// _fires: ["Start", "Update", "Loading", "Game"], // 多一个预加载界面
 	_fireIdx: 0,
 	_frame: [],
+	_ticks: [],
 	_time: 0,
 	_option: {
 		// 设定场景从Start开始，与场景文件名称相同
@@ -68,13 +69,37 @@ jees.game = {
 		_func && this._frame.push(_func);
 	},
 	/**
+	 * 在ticks中加入一个回调方法，每帧调用，需要手动移除
+	 * @param {Function} _func 
+	 */
+	tick(_func){
+		_func && this._ticks.push(_func);
+	},
+	// 移除一个tick
+	removeTick(_tick){
+		let len = this._ticks.length;
+		for( let i = 0; i < len; i ++ ){
+			let tick = this._ticks[i];
+			if(tick === _tick){
+				this._ticks.splice(i, 1);
+				_tick = null;
+				break;
+			}
+		}
+	},
+	/**
 	 * 帧函数，由脚本代码主动调用
 	 * @param {Float} _tick 距离上一帧所用时间，秒。
 	 * @example
 	 */
 	update(_tick) {
-		let func = this._frame.shift();
-		func && func();
+		let frame = this._frame.shift();
+		frame && frame(_tick);
+		let len = this._ticks.length;
+		for( let i = 0; i < len; i ++ ){
+			let tick = this._ticks[i];
+			tick(_tick);
+		}
 	},
 	/**
 	 * 游戏时间戳，如果存在服务器时间，则不取本地时间
