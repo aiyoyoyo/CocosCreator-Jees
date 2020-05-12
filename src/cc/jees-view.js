@@ -101,7 +101,7 @@ jees.view.Fire = cc.Class({
 	},
 	// 每帧回调
 	update(_t) {
-		jees.game.update();
+		jees.game.update(_t);
 		this._ex_update && this._ex_update(_t);
 	},
 	// 打开一个窗口型预制体
