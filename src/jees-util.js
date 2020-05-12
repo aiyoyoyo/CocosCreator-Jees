@@ -278,5 +278,25 @@ jees.util = {
 		spt_el.type = 'text/javascript'; 
 		spt_el.defer = true;             
 		dom_head.appendChild( spt_el );
-	},
+    },
+    // 倒计时格式化
+    time2cd( _time, _format ){
+        let str = "";
+        let s = parseInt( _time / 1000 );
+        let m = parseInt( s / 60 );
+        let h = parseInt( m / 60 );
+        s = s % 60;
+        m = m % 60;
+
+        if( s < 0 ) s = 0;
+        if( s < 10 ) s = "0" + s;
+        if( m < 10 ) m = "0" + m;
+        if( h < 10 ) h = "0" + h;
+        if( _format ){
+            str = _format.replace( "hh", h ).replace( "mm", m ).replace( "ss", s );
+        }else{
+            str = h + ":" + m + ":" + s;
+        }
+        return str;
+    },
 };

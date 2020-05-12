@@ -18,10 +18,14 @@ window.jees = jees || {};
  */
 jees.data = {
 	_local: null,
+	_objs: new Map(),
 	init() {
 		if (this._inited) return;
 		this._inited = true;
 		this._local = jees.platform.localStorage();
+	},
+	regist( _obj, _new ){
+		this._objs.set( _obj, _new );
 	},
 	/**
 	 * Set数据
@@ -81,9 +85,22 @@ jees.data = {
 				if (_obj[p] instanceof Date) {
 					_obj[p] = new Date(_data[p]);
 				} else {
-					// 不转换_开头属性，便于本地处理数据
-					if (!p.startsWith("_")) {
-						_obj[p] = _data[p];
+					let tmp = null;
+					if( _obj[p] instanceof Object ) {
+						for( let o of this._objs ){
+							if( _obj[p] instanceof o[0] ){
+								tmp = o[1].build();
+								break;
+							}
+						}
+					}
+					if( tmp ){
+						_obj[p] = this.json2data( _data[p], tmp );
+					} else {
+						// 不转换_开头属性，便于本地处理数据
+						if (!p.startsWith("_")) {
+							_obj[p] = _data[p];
+						}
 					}
 				}
 			} else {

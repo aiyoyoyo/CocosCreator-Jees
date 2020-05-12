@@ -18,20 +18,28 @@ window.jees = jees || {};
  * @see jees.socket
  */
 jees.game = {
-	// 设定场景从Start开始，与场景文件名称相同
 	_fires: ["Start", "Update", "Game"],
 	// _fires: ["Start", "Update", "Loading", "Game"], // 多一个预加载界面
-	_fireIdx: 1,
+	_fireIdx: 0,
 	_frame: [],
 	_time: 0,
+	_option: {
+		// 设定场景从Start开始，与场景文件名称相同
+		fires: ["Start", "Update", "Game"],
+	},
 	// 初始化
 	init(_opt) {
 		if (this._inited) return;
 		this._inited = true;
 		// 部分功能组件需要初始化, 部分有依赖顺序
-		if (_opt && _opt.mods) {
-			this._fires = _opt.fires;
+		if( _opt ){
+			for (var p in _opt) {
+				if (this._option.hasOwnProperty(p)) {
+					this._option[p] = _opt[p];
+				}
+			}	
 		}
+		
 		this._time = jees.util.timestamp();
 
 		jees.data.init(); // 数据处理组件
@@ -41,8 +49,9 @@ jees.game = {
 	// 调用即代表流程进入下一阶段
 	enter() {
 		//必走的流程
-		let fire = this._fires[this._fireIdx];
-		if (this._fireIdx >= this._fires.length) return;
+		let opt = this._option;
+		let fire = opt.fires[this._fireIdx];
+		if (this._fireIdx >= opt.length) return;
 		this._fireIdx++;
 		log("切换界面: ", fire);
 		cc.director.loadScene(fire);
