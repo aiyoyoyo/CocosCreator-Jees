@@ -72,8 +72,9 @@ jees.game = {
 	 * 在ticks中加入一个回调方法，每帧调用，需要手动移除
 	 * @param {Function} _func 
 	 */
-	tick(_func){
-		_func && this._ticks.push(_func);
+	tick(_func, _time){
+		if( _time ) _func.time = _time;
+		this._ticks.push(_func);
 	},
 	// 移除一个tick
 	removeTick(_tick){
@@ -92,13 +93,21 @@ jees.game = {
 	 * @param {Float} _tick 距离上一帧所用时间，秒。
 	 * @example
 	 */
-	update(_tick) {
+	update(_t) {
 		let frame = this._frame.shift();
-		frame && frame(_tick);
+		frame && frame(_t);
 		let len = this._ticks.length;
 		for( let i = 0; i < len; i ++ ){
 			let tick = this._ticks[i];
-			tick(_tick);
+			if( !tick ) continue;
+			if( tick.time ){
+				if( !tick._ttime ) tick._ttime = 0;
+				tick._ttime += _t;
+				if( tick._ttime > tick.time ){
+					tick( tick._ttime );
+					tick._ttime = 0;
+				}
+			}else tick(_t);
 		}
 	},
 	/**

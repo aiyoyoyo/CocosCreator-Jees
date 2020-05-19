@@ -169,7 +169,7 @@ jees.util = {
      * @param {Decimal} _val 
      * @returns {String}
      */
-    decimal2string(_val) {
+    decimal2string(_val,_fix) {
         if (!(_val instanceof Decimal)) {
             _val = new Decimal(_val);
         }
@@ -280,12 +280,10 @@ jees.util = {
 		dom_head.appendChild( spt_el );
     },
     /**
-     * 倒计时格式化
      * @param {Long} _time ms
-     * @param {*} _format "hh:mm:ss"
+     * @returns [sec,min,hour]
      */
-    time2cd( _time, _format ){
-        let str = "";
+    time2cdarr( _time ){
         let s = parseInt( ( _time + 900 ) / 1000 ); // 将倒计时延后900ms的数值
         let m = parseInt( s / 60 );
         let h = parseInt( m / 60 );
@@ -293,6 +291,19 @@ jees.util = {
         m = m % 60;
 
         if( s < 0 ) s = 0;
+        return [s,m,h];
+    },
+    /**
+     * 倒计时格式化
+     * @param {Long} _time ms
+     * @param {*} _format "hh:mm:ss"
+     */
+    time2cd( _time, _format ){
+        let str = "";
+        let cd = this.time2cdarr( _time );
+        let s = cd[0]; 
+        let m = cd[1];
+        let h = cd[2];
         if( s < 10 ) s = "0" + s;
         if( m < 10 ) m = "0" + m;
         if( h < 10 ) h = "0" + h;

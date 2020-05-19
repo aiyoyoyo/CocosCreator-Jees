@@ -61,12 +61,20 @@ jees.data = {
 	 * @param {Object} _obj 
 	 */
 	set2(_key, _obj) {
+		// 如果不存在存储空间问题，可以考虑不删除属性，直接保存，由加载时移除
+		let prv = new Map();
 		for (var p in _obj) {
 			if (p.startsWith("_")) {
+				let o = _obj[p];
+				prv.set( p, o );
 				delete _obj[p];
 			}
 		}
 		this.set(_key, JSON.stringify(_obj));
+
+		for( let p of prv.keys() ){
+			_obj[p] = prv.get( p );
+		}
 	},
 	/**
 	 * 移除本地数据

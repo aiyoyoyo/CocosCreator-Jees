@@ -144,8 +144,16 @@ window.ShowType = cc.Enum({
 jees.view.Window = cc.Class({
 	extends: jees.view.Comp,
 	properties: {
-		nodeClose: cc.Node,
-		nodeBody: cc.Node,
+		nodeClose: {
+			default: null,
+			type: cc.Node,
+			tooltip: CC_DEV && '触发点击关闭事件的节点',
+		},
+		nodeBody: {
+			default: null,
+			type: cc.Node,
+			tooltip: CC_DEV && '用于显示和隐藏时的主体节点',
+		},
 		ShowType: {
 			default: ShowType.NONE,
 			type: ShowType,
