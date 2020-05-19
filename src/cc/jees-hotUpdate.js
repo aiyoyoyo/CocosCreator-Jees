@@ -24,6 +24,8 @@ window.HotUpdateEvent = function (_code) {
  * @example 
  * 	jees.hotUpdate.bind( ( _status, _evt )=>{} ); 
  * 	jees.hotUpdate.check();
+ * @see jees.platform
+ * @see jees.data
  * @see jees.game
  * @see jees.http
  * @see jees.file
