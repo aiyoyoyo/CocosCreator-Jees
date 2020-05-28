@@ -1,0 +1,21 @@
+﻿<jscompress public="http://www.jscompress.cn/" command="import-combineset">
+<combinefile path="jees.cc.js">
+    <auto value="1" />
+    <sourcefile path=".\src\jees.js" />
+    <sourcefile path=".\src\jees-log.js" />
+    <sourcefile path=".\src\jees-util.js" />
+    <sourcefile path=".\src\jees-md5.js" />
+    <sourcefile path=".\src\jees-data.js" />
+    <sourcefile path=".\src\jees-notifire.js" />
+    <sourcefile path=".\src\jees-http.js" />
+    <sourcefile path=".\src\jees-audio.js" />
+    <sourcefile path=".\src\jees-socket.js" />
+    <sourcefile path=".\src\jees-unit.js" />
+    <sourcefile path=".\src\wc\jees-wechat.js" />
+    <sourcefile path=".\src\cc\jees-platform.js" />
+    <sourcefile path=".\src\cc\jees-file.js" />
+    <sourcefile path=".\src\cc\jees-game.js" />
+    <sourcefile path=".\src\cc\jees-view.js" />
+    <sourcefile path=".\src\cc\jees-hotUpdate.js" />
+</combinefile>
+</jscompress>
