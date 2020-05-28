@@ -19,6 +19,9 @@ jees.platform = {
 	isAndroid() {
 		return cc.sys.os === cc.sys.OS_ANDROID;
 	},
+	isWechat(){
+		return ( cc.sys.platform === cc.sys.WECHAT_GAME ) && !!wx;
+	},
 	request() {
 		return cc.loader.getXMLHttpRequest();
 	},
@@ -27,5 +30,8 @@ jees.platform = {
 	},
 	locale() {
 		return cc.sys.languageCode;
+	},
+	audio(){
+		return cc.audioEngine;
 	},
 };

@@ -21,11 +21,11 @@ jees.log = {
 	_history: [],
 	_push(_txt, _type, _p0, _p1, _p2, _p3, _p4) {
 		let param = [];
-		if (_p4) param = [_p0, _p1, _p2, _p3, _p4];
-		else if (_p3) param = [_p0, _p1, _p2, _p3];
-		else if (_p2) param = [_p0, _p1, _p2];
-		else if (_p1) param = [_p0, _p1];
-		else if (_p0) param = [_p0];
+		if (_p4!= undefined) param = [_p0, _p1, _p2, _p3, _p4];
+		else if (_p3!= undefined) param = [_p0, _p1, _p2, _p3];
+		else if (_p2!= undefined) param = [_p0, _p1, _p2];
+		else if (_p1!= undefined) param = [_p0, _p1];
+		else if (_p0!= undefined) param = [_p0];
 		this._history.push({
 			text: _txt,
 			type: _type,

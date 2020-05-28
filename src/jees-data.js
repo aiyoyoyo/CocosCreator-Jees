@@ -132,4 +132,19 @@ jees.data = {
 		return arr;
 	},
 	// TODO 数据集合操作 //////
+	/**
+     * 查看本地存储容量 KB
+     * @public
+     * @returns {Float}
+     */
+    getCapacity(){
+        let size = 0;
+        for( var item in this._local ) {
+            if( this._local.hasOwnProperty( item ) ) {
+                let data = this._local.getItem( item );
+                size += data ? data.length : 0;
+            }
+        }
+        log( "已使用存储：", ( ( size / 1024 ).toFixed(2) ) + "KB" );
+    },
 };

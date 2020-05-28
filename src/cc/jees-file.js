@@ -50,13 +50,13 @@ jees.file = {
 		});
 	},
 	filesBy(_path, _type, _func, _errh) {
-		cc.loader.loadResDir(_path, _type, (_err, _files) => {
+		cc.loader.loadResDir(_path, _type, (_err, _files, _urls) => {
 			if (_err) {
 				err("加载文件发生错误：" + JSON.stringify(_err));
 				_errh && _errh(_err);
 				return;
 			}
-			_func && _func(_files);
+			_func && _func(_files,_urls);
 		});
 	},
 	// 获取本地json
