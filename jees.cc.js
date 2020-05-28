@@ -738,6 +738,8 @@ jees.data = {
 				// _obj[p] = data[p];
 				if (_obj[p] instanceof Date) {
 					_obj[p] = new Date(_data[p]);
+				} else if(_obj[p] instanceof Decimal){
+					_obj[p] = new Decimal(_data[p]);
 				} else {
 					let tmp = null;
 					if( _obj[p] instanceof Object ) {
