@@ -12,7 +12,7 @@ window.jees = jees || {};
  * 事件发射器
  * @example 
  * 脚本绑定 this.bind( _event, _callback ); 
- * 自定义绑定 jees.notifire.bind( _event, _callback );
+ * 自定义绑定 jees.notifire.bind( _com, _event, _callback );
  * 事件推送 notify( _event, _param... );
  * @see jees.view.Comp
  */
@@ -29,7 +29,13 @@ jees.notifire = {
 		if (!_com._evt_funs) {
 			_com._evt_funs = new Map();
 		}
-		_fun && _com._evt_funs.set(_evt, _fun);
+		if( _fun ){
+			if( _fun instanceof Function ){
+				_com._evt_funs.set(_evt, _fun);
+			}else{
+				wa( "错误的方法：", _evt, _fun );
+			}
+		}
 
 		let evt_coms = this._events.get(_evt);
 		if (evt_coms) {
