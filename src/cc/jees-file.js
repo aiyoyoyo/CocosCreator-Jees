@@ -20,7 +20,7 @@ jees.file = {
 	load(_path, _func, _errh) {
 		cc.loader.loadRes(_path, (_err, _file) => {
 			if (_err) {
-				err("加载文件发生错误：" + JSON.stringify(_err));
+				err("jees.file.load：[" + _path + "]" + JSON.stringify(_err));
 				_errh && _errh(_err);
 				return;
 			}
@@ -31,7 +31,7 @@ jees.file = {
 	loadRemote(_url, _func, _errh) {
 		cc.loader.load(_url, (_err, _file) => {
 			if (_err) {
-				err("加载文件[" + _url + "]发生错误：" + JSON.stringify(_err));
+				err("jees.file.loadRemote：[" + _url + "]" + JSON.stringify(_err));
 				_errh && _errh(_err);
 				return;
 			}
@@ -42,7 +42,7 @@ jees.file = {
 	files(_path, _func, _errh) {
 		cc.loader.loadResDir(_path, (_err, _files) => {
 			if (_err) {
-				err("加载文件发生错误：" + JSON.stringify(_err));
+				err("jees.file.files：[" + _path + "]" + JSON.stringify(_err));
 				_errh && _errh(_err);
 				return;
 			}
@@ -52,7 +52,7 @@ jees.file = {
 	filesBy(_path, _type, _func, _errh) {
 		cc.loader.loadResDir(_path, _type, (_err, _files, _urls) => {
 			if (_err) {
-				err("加载文件发生错误：" + JSON.stringify(_err));
+				err("jees.file.filesBy[" + _path + "]" + JSON.stringify(_err));
 				_errh && _errh(_err);
 				return;
 			}
@@ -63,7 +63,7 @@ jees.file = {
 	json(_path, _func, _errh) {
 		cc.loader.loadRes(_path, (_err, _file) => {
 			if (_err) {
-				err("加载文件[" + _path + "]发生错误：" + JSON.stringify(_err));
+				err("jees.file.json[" + _path + "]" + JSON.stringify(_err));
 				_errh && _errh(_err);
 				return;
 			}
