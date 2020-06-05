@@ -811,7 +811,7 @@ window.jees = jees || {};
  * 事件发射器
  * @example 
  * 脚本绑定 this.bind( _event, _callback ); 
- * 自定义绑定 jees.notifire.bind( _event, _callback );
+ * 自定义绑定 jees.notifire.bind( _com, _event, _callback );
  * 事件推送 notify( _event, _param... );
  * @see jees.view.Comp
  */
@@ -828,7 +828,13 @@ jees.notifire = {
 		if (!_com._evt_funs) {
 			_com._evt_funs = new Map();
 		}
-		_fun && _com._evt_funs.set(_evt, _fun);
+		if( _fun ){
+			if( _fun instanceof Function ){
+				_com._evt_funs.set(_evt, _fun);
+			}else{
+				wa( "错误的方法：", _evt, _fun );
+			}
+		}
 
 		let evt_coms = this._events.get(_evt);
 		if (evt_coms) {
@@ -1382,6 +1388,12 @@ jees.platform = {
 	audio(){
 		return cc.audioEngine;
 	},
+	isIPhone(){
+		return this.isNative() && cc.sys.platform == cc.sys.IPHONE;
+	},
+	isIPhoneX(){
+		return this.isIPhone() && jsb.Device.getSafeAreaEdge().z;
+	},
 };;
 ///<jscompress sourcefile="jees-file.js" />
 /*
@@ -1406,7 +1418,7 @@ jees.file = {
 	load(_path, _func, _errh) {
 		cc.loader.loadRes(_path, (_err, _file) => {
 			if (_err) {
-				err("加载文件发生错误：" + JSON.stringify(_err));
+				err("jees.file.load：[" + _path + "]" + JSON.stringify(_err));
 				_errh && _errh(_err);
 				return;
 			}
@@ -1417,7 +1429,7 @@ jees.file = {
 	loadRemote(_url, _func, _errh) {
 		cc.loader.load(_url, (_err, _file) => {
 			if (_err) {
-				err("加载文件[" + _url + "]发生错误：" + JSON.stringify(_err));
+				err("jees.file.loadRemote：[" + _url + "]" + JSON.stringify(_err));
 				_errh && _errh(_err);
 				return;
 			}
@@ -1428,7 +1440,7 @@ jees.file = {
 	files(_path, _func, _errh) {
 		cc.loader.loadResDir(_path, (_err, _files) => {
 			if (_err) {
-				err("加载文件发生错误：" + JSON.stringify(_err));
+				err("jees.file.files：[" + _path + "]" + JSON.stringify(_err));
 				_errh && _errh(_err);
 				return;
 			}
@@ -1438,7 +1450,7 @@ jees.file = {
 	filesBy(_path, _type, _func, _errh) {
 		cc.loader.loadResDir(_path, _type, (_err, _files, _urls) => {
 			if (_err) {
-				err("加载文件发生错误：" + JSON.stringify(_err));
+				err("jees.file.filesBy[" + _path + "]" + JSON.stringify(_err));
 				_errh && _errh(_err);
 				return;
 			}
@@ -1449,7 +1461,7 @@ jees.file = {
 	json(_path, _func, _errh) {
 		cc.loader.loadRes(_path, (_err, _file) => {
 			if (_err) {
-				err("加载文件[" + _path + "]发生错误：" + JSON.stringify(_err));
+				err("jees.file.json[" + _path + "]" + JSON.stringify(_err));
 				_errh && _errh(_err);
 				return;
 			}
@@ -1594,9 +1606,11 @@ jees.game = {
 	},
 	/**
 	 * 游戏时间戳，如果存在服务器时间，则不取本地时间
+	 * 单位: 毫秒
 	 */
-	time(){
-		return this._time == 0 ? jees.util.timestamp() : this._time;
+	time( _time ){
+		this._time = _time || this._time;
+		return this._time;
 	},
 	/**
 	 * 游戏时间增加1秒
@@ -1658,6 +1672,7 @@ jees.view.Comp = cc.Class({
 		this._ex_disable && this._ex_disable();
 	},
 	onDestroy() {
+		this.unscheduleAllCallbacks();
 		this.unbind();
 		this._ex_destroy && this._ex_destroy();
 	},
@@ -1684,16 +1699,23 @@ jees.view.Comp = cc.Class({
 jees.view.Fire = cc.Class({
 	extends: jees.view.Comp,
 	properties: {
-		nodeHead: cc.Node,
 		nodeBody: cc.Node,
 		viewBody: cc.Prefab,
 		nodeWind: cc.Node,
+		nodeDialog: cc.Node,
+		nodeNovice: cc.Node,
+		nodeSys: cc.Node,
 	},
 	// 重载onload事件，用于初始化jees.game、jees.view相关内容
 	onLoad() {
 		jees.view.init(this);
 		// 通过在编辑器绑定根节点预制体(Body)
 		if (!!this.nodeBody && !!this.viewBody) {
+			if ( jees.platform.isIPhoneX() ) {
+				this.nodeBody.getComponent(cc.Widget).top = jsb.Device.getSafeAreaEdge().z;
+				this.nodeBody.getComponent(cc.Widget).updateAlignment();
+				this.nodeBody.width = window.innerWidth;
+			}
 			let body = cc.instantiate(this.viewBody);
 			this.nodeBody.addChild(body);
 		}
@@ -1715,13 +1737,35 @@ jees.view.Fire = cc.Class({
 	// 打开一个窗口型预制体
 	openWindow(_name, _p0, _p1, _p2, _p3, _p4) {
 		if (!this.nodeWind) return;
-
-		jees.file.load("views/window/" + _name, (_file) => {
-			let comp = cc.instantiate(_file);
+		this._open_profab( this.nodeWind, "views/window/", _name, _p0, _p1, _p2, _p3, _p4 )
+	},
+	openDialog( _name, _p0, _p1, _p2, _p3, _p4 ){
+		if (!this.nodeDialog) return;
+		this._open_profab( this.nodeDialog, "views/dialog/", _name, _p0, _p1, _p2, _p3, _p4 )
+	},
+	openNovice(_name, _p0, _p1, _p2, _p3, _p4){
+		if (!this.nodeNovice) return;
+		this._open_profab( this.nodeNovice, "views/novice/", _name, _p0, _p1, _p2, _p3, _p4 )
+	},
+	openSystem(_name, _p0, _p1, _p2, _p3, _p4){
+		if (!this.nodeSys) return;
+		this._open_profab( this.nodeSys, "views/system/", _name, _p0, _p1, _p2, _p3, _p4 )
+	},
+	_open_profab( _node, _path, _name, _p0, _p1, _p2, _p3, _p4 ){
+		if( this._windows.has( _name ) ){
+			let comp = this._windows.get( _name );
 			let wind = comp.getComponent(jees.view.Window);
 			wind.setParams(_p0, _p1, _p2, _p3, _p4);
-			this.nodeWind.addChild(comp);
-		});
+			_node.addChild(comp);
+		}else{
+			jees.file.load( _path + _name, (_file) => {
+				let comp = cc.instantiate(_file);
+				let wind = comp.getComponent(jees.view.Window);
+				wind.setParams(_p0, _p1, _p2, _p3, _p4);
+				_node.addChild(comp);
+				this._windows.set( _name, comp );
+			});
+		}
 	},
 	// 每秒回调
 	second(){
