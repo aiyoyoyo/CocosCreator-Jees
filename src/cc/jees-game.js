@@ -112,9 +112,11 @@ jees.game = {
 	},
 	/**
 	 * 游戏时间戳，如果存在服务器时间，则不取本地时间
+	 * 单位: 毫秒
 	 */
-	time(){
-		return this._time == 0 ? jees.util.timestamp() : this._time;
+	time( _time ){
+		this._time = _time || this._time;
+		return this._time;
 	},
 	/**
 	 * 游戏时间增加1秒

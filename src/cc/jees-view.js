@@ -50,6 +50,7 @@ jees.view.Comp = cc.Class({
 		this._ex_disable && this._ex_disable();
 	},
 	onDestroy() {
+		this.unscheduleAllCallbacks();
 		this.unbind();
 		this._ex_destroy && this._ex_destroy();
 	},
@@ -76,16 +77,23 @@ jees.view.Comp = cc.Class({
 jees.view.Fire = cc.Class({
 	extends: jees.view.Comp,
 	properties: {
-		nodeHead: cc.Node,
 		nodeBody: cc.Node,
 		viewBody: cc.Prefab,
 		nodeWind: cc.Node,
+		nodeDialog: cc.Node,
+		nodeNovice: cc.Node,
+		nodeSys: cc.Node,
 	},
 	// 重载onload事件，用于初始化jees.game、jees.view相关内容
 	onLoad() {
 		jees.view.init(this);
 		// 通过在编辑器绑定根节点预制体(Body)
 		if (!!this.nodeBody && !!this.viewBody) {
+			if ( jees.platform.isIPhoneX() ) {
+				this.nodeBody.getComponent(cc.Widget).top = jsb.Device.getSafeAreaEdge().z;
+				this.nodeBody.getComponent(cc.Widget).updateAlignment();
+				this.nodeBody.width = window.innerWidth;
+			}
 			let body = cc.instantiate(this.viewBody);
 			this.nodeBody.addChild(body);
 		}
@@ -107,13 +115,35 @@ jees.view.Fire = cc.Class({
 	// 打开一个窗口型预制体
 	openWindow(_name, _p0, _p1, _p2, _p3, _p4) {
 		if (!this.nodeWind) return;
-
-		jees.file.load("views/window/" + _name, (_file) => {
-			let comp = cc.instantiate(_file);
+		this._open_profab( this.nodeWind, "views/window/", _name, _p0, _p1, _p2, _p3, _p4 )
+	},
+	openDialog( _name, _p0, _p1, _p2, _p3, _p4 ){
+		if (!this.nodeDialog) return;
+		this._open_profab( this.nodeDialog, "views/dialog/", _name, _p0, _p1, _p2, _p3, _p4 )
+	},
+	openNovice(_name, _p0, _p1, _p2, _p3, _p4){
+		if (!this.nodeNovice) return;
+		this._open_profab( this.nodeNovice, "views/novice/", _name, _p0, _p1, _p2, _p3, _p4 )
+	},
+	openSystem(_name, _p0, _p1, _p2, _p3, _p4){
+		if (!this.nodeSys) return;
+		this._open_profab( this.nodeSys, "views/system/", _name, _p0, _p1, _p2, _p3, _p4 )
+	},
+	_open_profab( _node, _path, _name, _p0, _p1, _p2, _p3, _p4 ){
+		if( this._windows.has( _name ) ){
+			let comp = this._windows.get( _name );
 			let wind = comp.getComponent(jees.view.Window);
 			wind.setParams(_p0, _p1, _p2, _p3, _p4);
-			this.nodeWind.addChild(comp);
-		});
+			_node.addChild(comp);
+		}else{
+			jees.file.load( _path + _name, (_file) => {
+				let comp = cc.instantiate(_file);
+				let wind = comp.getComponent(jees.view.Window);
+				wind.setParams(_p0, _p1, _p2, _p3, _p4);
+				_node.addChild(comp);
+				this._windows.set( _name, comp );
+			});
+		}
 	},
 	// 每秒回调
 	second(){

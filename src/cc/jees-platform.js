@@ -34,4 +34,10 @@ jees.platform = {
 	audio(){
 		return cc.audioEngine;
 	},
+	isIPhone(){
+		return this.isNative() && cc.sys.platform == cc.sys.IPHONE;
+	},
+	isIPhoneX(){
+		return this.isIPhone() && jsb.Device.getSafeAreaEdge().z;
+	},
 };
