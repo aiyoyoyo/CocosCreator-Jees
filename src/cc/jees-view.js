@@ -34,6 +34,9 @@ jees.view = {
  */
 jees.view.Comp = cc.Class({
 	extends: cc.Component,
+	properties:{
+		_ticks : new Array(),
+	},
 	onLoad() {
 		this._ex_load && this._ex_load();
 	},
@@ -50,6 +53,10 @@ jees.view.Comp = cc.Class({
 		this._ex_disable && this._ex_disable();
 	},
 	onDestroy() {
+		let len = this._ticks.length;
+		for( let i = 0; i < len; i ++ ){
+			jees.game.removeTick( this._ticks[i] );
+		}
 		this.unscheduleAllCallbacks();
 		this.unbind();
 		this._ex_destroy && this._ex_destroy();
@@ -59,6 +66,9 @@ jees.view.Comp = cc.Class({
 	},
 	unbind(_evt) {
 		jees.notifire.unbind(this, _evt);
+	},
+	tick(_tick){
+		this._ticks.push(_tick);
 	},
 	notify(_evt, _p0, _p1, _p2, _p3, _p4) {
 		this._ex_notify && this._ex_notify(_evt, _p0, _p1, _p2, _p3, _p4);
@@ -131,7 +141,7 @@ jees.view.Fire = cc.Class({
 	},
 	_open_profab( _node, _path, _name, _p0, _p1, _p2, _p3, _p4 ){
 		if( this._windows.has( _name ) ){
-			let comp = this._windows.get( _name );
+			let comp = cc.instantiate( this._windows.get( _name ) );
 			let wind = comp.getComponent(jees.view.Window);
 			wind.setParams(_p0, _p1, _p2, _p3, _p4);
 			_node.addChild(comp);
@@ -141,7 +151,7 @@ jees.view.Fire = cc.Class({
 				let wind = comp.getComponent(jees.view.Window);
 				wind.setParams(_p0, _p1, _p2, _p3, _p4);
 				_node.addChild(comp);
-				this._windows.set( _name, comp );
+				this._windows.set( _name, _file );
 			});
 		}
 	},

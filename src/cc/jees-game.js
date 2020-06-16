@@ -72,8 +72,9 @@ jees.game = {
 	 * 在ticks中加入一个回调方法，每帧调用，需要手动移除
 	 * @param {Function} _func 
 	 */
-	tick(_func, _time){
+	tick(_func, _time, _comp){
 		if( _time ) _func.time = _time;
+		if( _comp ) _comp.tick(_func);
 		this._ticks.push(_func);
 	},
 	// 移除一个tick

@@ -28,8 +28,8 @@ jees.file = {
 		});
 	},
 	// 仅支持png
-	loadRemote(_url, _func, _errh) {
-		cc.loader.load(_url, (_err, _file) => {
+	loadRemote(_url, _type, _func, _errh) {
+		cc.loader.load({url: _url, type:_type}, (_err, _file) => {
 			if (_err) {
 				err("jees.file.loadRemote：[" + _url + "]" + JSON.stringify(_err));
 				_errh && _errh(_err);

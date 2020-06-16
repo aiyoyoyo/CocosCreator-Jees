@@ -57,7 +57,7 @@ jees.wechat = {
           },
           complete(){
             if( !status ){
-              _self._open_setting(  _succ, _fail );
+                self._open_setting(  _succ, _fail );
             }
           },
       });
@@ -84,13 +84,19 @@ jees.wechat = {
                     success(__res){
                         self._ed = __res.encryptedData;
                         self._iv = __res.iv;
-                        self._ui = __res.userInfo;
+						self._ui = __res.userInfo;
+						jees.file.loadRemote( __res.userInfo.avatarUrl, "png", ( _file )=>{
+							self._ui.icon = _file;
+						});
                         _succ && _succ();
                     }
                 });
             },
         });
-    },
+	},
+	getUserInfo(){
+		return this._ui;
+	},
     /**
      * 设置微信云数据
      */
@@ -162,5 +168,27 @@ jees.wechat = {
      */
     getFriendKVDataList(_keys,  _succ, _fail, _comp){
         wx.getFriendCloudStorage( this._create_storeage( _keys, _succ, _fail, _comp ) );
+    },
+
+    // 朋友圈功能 ===========================================
+    /**
+     * 
+     * @param {title,imageUrl,query} _opt 
+     * @param {Function} _succ 
+     * @param {Function} _fail 
+     */
+    share( _opt, _succ, _fail ) {
+        let share_msg = {
+            title: _opt.title,
+            imageUrl: _opt.imageUrl,
+            query: _opt.query,
+            success: info => {
+                _succ && _succ();
+            },
+            fail: info => {
+                _fail && _fail();
+            },
+        };
+        wx.shareAppMessage( share_msg );
     },
 };

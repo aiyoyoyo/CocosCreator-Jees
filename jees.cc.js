@@ -1244,7 +1244,7 @@ jees.wechat = {
           },
           complete(){
             if( !status ){
-              _self._open_setting(  _succ, _fail );
+                self._open_setting(  _succ, _fail );
             }
           },
       });
@@ -1271,13 +1271,19 @@ jees.wechat = {
                     success(__res){
                         self._ed = __res.encryptedData;
                         self._iv = __res.iv;
-                        self._ui = __res.userInfo;
+						self._ui = __res.userInfo;
+						jees.file.loadRemote( __res.userInfo.avatarUrl, "png", ( _file )=>{
+							self._ui.icon = _file;
+						});
                         _succ && _succ();
                     }
                 });
             },
         });
-    },
+	},
+	getUserInfo(){
+		return this._ui;
+	},
     /**
      * 设置微信云数据
      */
@@ -1349,6 +1355,28 @@ jees.wechat = {
      */
     getFriendKVDataList(_keys,  _succ, _fail, _comp){
         wx.getFriendCloudStorage( this._create_storeage( _keys, _succ, _fail, _comp ) );
+    },
+
+    // 朋友圈功能 ===========================================
+    /**
+     * 
+     * @param {title,imageUrl,query} _opt 
+     * @param {Function} _succ 
+     * @param {Function} _fail 
+     */
+    share( _opt, _succ, _fail ) {
+        let share_msg = {
+            title: _opt.title,
+            imageUrl: _opt.imageUrl,
+            query: _opt.query,
+            success: info => {
+                _succ && _succ();
+            },
+            fail: info => {
+                _fail && _fail();
+            },
+        };
+        wx.shareAppMessage( share_msg );
     },
 };;
 ///<jscompress sourcefile="jees-platform.js" />
@@ -1426,8 +1454,8 @@ jees.file = {
 		});
 	},
 	// 仅支持png
-	loadRemote(_url, _func, _errh) {
-		cc.loader.load(_url, (_err, _file) => {
+	loadRemote(_url, _type, _func, _errh) {
+		cc.loader.load({url: _url, type:_type}, (_err, _file) => {
 			if (_err) {
 				err("jees.file.loadRemote：[" + _url + "]" + JSON.stringify(_err));
 				_errh && _errh(_err);
@@ -1566,8 +1594,9 @@ jees.game = {
 	 * 在ticks中加入一个回调方法，每帧调用，需要手动移除
 	 * @param {Function} _func 
 	 */
-	tick(_func, _time){
+	tick(_func, _time, _comp){
 		if( _time ) _func.time = _time;
+		if( _comp ) _comp.tick(_func);
 		this._ticks.push(_func);
 	},
 	// 移除一个tick
@@ -1656,6 +1685,9 @@ jees.view = {
  */
 jees.view.Comp = cc.Class({
 	extends: cc.Component,
+	properties:{
+		_ticks : new Array(),
+	},
 	onLoad() {
 		this._ex_load && this._ex_load();
 	},
@@ -1672,6 +1704,10 @@ jees.view.Comp = cc.Class({
 		this._ex_disable && this._ex_disable();
 	},
 	onDestroy() {
+		let len = this._ticks.length;
+		for( let i = 0; i < len; i ++ ){
+			jees.game.removeTick( this._ticks[i] );
+		}
 		this.unscheduleAllCallbacks();
 		this.unbind();
 		this._ex_destroy && this._ex_destroy();
@@ -1681,6 +1717,9 @@ jees.view.Comp = cc.Class({
 	},
 	unbind(_evt) {
 		jees.notifire.unbind(this, _evt);
+	},
+	tick(_tick){
+		this._ticks.push(_tick);
 	},
 	notify(_evt, _p0, _p1, _p2, _p3, _p4) {
 		this._ex_notify && this._ex_notify(_evt, _p0, _p1, _p2, _p3, _p4);
@@ -1753,7 +1792,7 @@ jees.view.Fire = cc.Class({
 	},
 	_open_profab( _node, _path, _name, _p0, _p1, _p2, _p3, _p4 ){
 		if( this._windows.has( _name ) ){
-			let comp = this._windows.get( _name );
+			let comp = cc.instantiate( this._windows.get( _name ) );
 			let wind = comp.getComponent(jees.view.Window);
 			wind.setParams(_p0, _p1, _p2, _p3, _p4);
 			_node.addChild(comp);
@@ -1763,7 +1802,7 @@ jees.view.Fire = cc.Class({
 				let wind = comp.getComponent(jees.view.Window);
 				wind.setParams(_p0, _p1, _p2, _p3, _p4);
 				_node.addChild(comp);
-				this._windows.set( _name, comp );
+				this._windows.set( _name, _file );
 			});
 		}
 	},
